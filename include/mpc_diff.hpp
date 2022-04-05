@@ -22,14 +22,14 @@
 
 namespace MPC
 {
-    const int N = 10; //Prediction horizon
+    const int N = 12; //Prediction horizon
 
     const int n_states = 3;
     const int n_controls = 2;
     const double dt = 0.1;
 
-    Eigen::DiagonalMatrix <autodiff::real, 3> const Q (1., 1., 0.1);
-    Eigen::DiagonalMatrix <autodiff::real, 2> const R (0.1, 0.01);
+    Eigen::DiagonalMatrix <autodiff::real, 3> const Q (4., 4., 0.1);
+    Eigen::DiagonalMatrix <autodiff::real, 2> const R (1., 0.01);
 
     class MPC
     {
