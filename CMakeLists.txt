@@ -157,6 +157,8 @@ include_directories(
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_executable(mpc_node src/mpc_node.cpp)
 target_link_libraries(mpc_node autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
+add_executable(line_tracking src/line_tracking.cpp)
+target_link_libraries(line_tracking autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
@@ -187,10 +189,9 @@ target_link_libraries(mpc_node autodiff::autodiff Eigen3::Eigen nlopt ${catkin_L
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS scripts/pid_controller.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

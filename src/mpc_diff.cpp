@@ -59,7 +59,11 @@ namespace MPC
                 delta_pos(2,0) = 2*PI-abs(delta_pos(2,0));
             }
             delta_con = cur_control-reference_controls.col(0);
+           
+           
             step_cost = delta_pos.transpose()*Q*delta_pos+delta_con.transpose()*R*delta_con;
+            //step_cost*=pow(1.05,i);
+            
             result(0,0) += step_cost(0,0); //adding step cost function to objective function
         }
         return result;

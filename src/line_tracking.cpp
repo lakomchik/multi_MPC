@@ -132,10 +132,11 @@ int main(int argc, char **argv)
   int hz = 1/MPC::dt;
   ros::Rate loop_rate(10);
   double minf = 1;
-  //myfile <<"X\tY\tTheta\t\n";
+  int iter = 0;
+  myfile <<"X\tY\tTheta\t\n";
   while (ros::ok())
   {
-    double theta_prev =0;
+ 
     is_operation = true;
     geometry_msgs::Twist speeds;
    // ROS_INFO("IIIII");
@@ -143,11 +144,16 @@ int main(int argc, char **argv)
     speeds.angular.z = 0;
     s+=ds;
     double cur_x, cur_y, prev_x, prev_y, theta, v_ref;
+    cur_x = MPC::dt*iter*0.1;
+    cur_y = 1.;
+    theta = 0;
+    /*
     cur_x = c*sqrt(2)*std::cos(s)/(1+pow(sin(s),2));
     cur_y = c*sqrt(2)*std::sin(s)*std::cos(s)/(1+pow(sin(s),2));
     prev_x = c*sqrt(2)*std::cos(s-ds)/(1+pow(sin(s-ds),2));
     prev_y = c*sqrt(2)*std::sin(s-ds)*std::cos(s-ds)/(1+pow(sin(s-ds),2));
     theta = atan2(cur_y-prev_y,cur_x-prev_x);
+    */
     std::rotate(ref_traj.begin(), ref_traj.begin()+3, ref_traj.end());
     
     ref_traj.pop_back();
@@ -170,8 +176,18 @@ int main(int argc, char **argv)
     }*/
     for(int i = 0; i <  MPC::N; ++i)
     {
-        double j;
-        j = s + ds*i;
+        //double j;
+        //j = s + ds*i;
+        cur_x = MPC::dt*(iter+i)*0.1;
+        cur_y = 1.;
+        theta = 0;
+        v_ref = 0.1;
+
+        ref_path(0,i) = cur_x;
+        ref_path(1,i) = cur_y;
+        ref_path(2,i) = theta;
+        ref_con(0,i) = v_ref;
+        ref_con(0,i) = 0;
         //circle
         /*ref_path(0,i) = std::cos(j);
         ref_path(1,i) = std::sin(j);
@@ -184,27 +200,17 @@ int main(int argc, char **argv)
         ref_path(2,i) = 0;
         ref_con(0,i) = 0;
         ref_con(0,i) = 0;*/
-        double next_x, next_y, next_theta;
+        /*
         cur_x = c*sqrt(2)*std::cos(j)/(1+pow(sin(j),2));
         cur_y = c*sqrt(2)*std::sin(j)*std::cos(j)/(1+pow(sin(j),2));
         prev_x = c*sqrt(2)*std::cos(j-ds)/(1+pow(sin(j-ds),2));
         prev_y = c*sqrt(2)*std::sin(j-ds)*std::cos(j-ds)/(1+pow(sin(j-ds),2));
-        next_x=c*sqrt(2)*std::cos(j+ds)/(1+pow(sin(j+ds),2));
-        next_y = c*sqrt(2)*std::sin(j+ds)*std::cos(j+ds)/(1+pow(sin(j+ds),2));
-        next_theta = atan2(next_y-cur_y,next_x-cur_x);
         theta = atan2(cur_y-prev_y,cur_x-prev_x);
         v_ref = sqrt( pow(cur_y-prev_y,2) + pow(cur_x-prev_x,2) )/MPC::dt;
-
-        ref_path(0,i) = cur_x;
-        ref_path(1,i) = cur_y;
-        ref_path(2,i) = theta;
-        ref_con(0,i) = v_ref;
+        */
         
-        double w_ref;
-        w_ref = (next_theta-theta)/MPC::dt;
-        ref_con(1,i) = w_ref; 
-        std::cout<<"W_REF "<<w_ref<<"\n";
-        theta_prev = theta;
+
+      
         
 
 
@@ -214,12 +220,18 @@ int main(int argc, char **argv)
 
 
     }
+    /*
     cur_x = c*sqrt(2)*std::cos(s)/(1+pow(sin(s),2));
     cur_y = c*sqrt(2)*std::sin(s)*std::cos(s)/(1+pow(sin(s),2));
     prev_x = c*sqrt(2)*std::cos(s-ds)/(1+pow(sin(s-ds),2));
     prev_y = c*sqrt(2)*std::sin(s-ds)*std::cos(s-ds)/(1+pow(sin(s-ds),2));
     theta = atan2(cur_y-prev_y,cur_x-prev_x);
     v_ref = sqrt( pow(cur_y-prev_y,2) + pow(cur_x-prev_x,2) )/MPC::dt;
+    */
+    cur_x = MPC::dt*(iter)*0.1;
+    cur_y = 1.;
+    theta = 0;
+    v_ref = 0.1;
     std::cout<<"\n x: "<<cur_x<<"\ty: "<<cur_y<<"\ttheta: "<<theta<<"\tv: "<<v_ref<<"\n";
     mpc.set_reference(ref_path, ref_con);
     Eigen::Matrix<double,MPC::n_controls, 1> calc_control;
@@ -243,6 +255,7 @@ int main(int argc, char **argv)
 
       speeds.linear.x = calc_control(0,0);
       speeds.angular.z = calc_control(1,0);
+      iter+=1;
 
     }
     else
