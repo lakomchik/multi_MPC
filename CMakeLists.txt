@@ -157,6 +157,8 @@ include_directories(
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_executable(mpc_node src/mpc_node.cpp)
 target_link_libraries(mpc_node autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
+add_executable(mpc_node_omni src/mpc_node_omni.cpp)
+target_link_libraries(mpc_node_omni autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
 add_executable(line_tracking src/line_tracking.cpp)
 target_link_libraries(line_tracking autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
 
