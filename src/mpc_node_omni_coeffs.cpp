@@ -111,9 +111,23 @@ void init_ref_trajectory(std::vector<double> & ref_trajectory)
 
 int main(int argc, char **argv)
 {
-  auto thr_num =  std::thread::hardware_concurrency();
-  std::cout<<"thread_num = "<<thr_num<<"\n";
-  myfile.open ("output.txt");
+  double q1, q2, q3, r1, r2, r3;
+  Eigen::Matrix<autodiff::real, MPC::n_states, MPC::n_states> QQ;
+  QQ = MPC::Q;
+  q1 = QQ(0,0).val();
+  q2 = QQ(1,1).val();
+  q3 = QQ(2,2).val();
+  Eigen::Matrix<autodiff::real, MPC::n_controls, MPC::n_controls> RR;
+  RR = MPC::R;
+  r1 = RR(0,0).val();
+  r2 = RR(1,1).val();
+  r3 = RR(2,2).val();
+  std::stringstream ss;
+  std::string file_name;
+  
+  ss<< "" << std::fixed << std::setprecision(2) << "omni_coeffs" << " " << q1 << " " << q2<< " " << q3<< " " << r1<< " " << r2<<" "<< r3<<".txt";
+  file_name = ss.str();    
+  myfile.open(file_name);
   ros::init(argc, argv, "mpc_node");
   ros::NodeHandle n;
   ros::Publisher velocity_pub = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);

@@ -28,8 +28,8 @@ namespace MPC
     const int n_controls = 2;
     const double dt = 0.1;
 
-    Eigen::DiagonalMatrix <autodiff::real, 3> const Q (10., 10., 0.1);
-    Eigen::DiagonalMatrix <autodiff::real, 2> const R (0.8, 0.1);
+    Eigen::DiagonalMatrix <autodiff::real, 3> const Q (10., 10., .01);
+    Eigen::DiagonalMatrix <autodiff::real, 2> const R (0.8, .01);
 
     class MPC
     {
