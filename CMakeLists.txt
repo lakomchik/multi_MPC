@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   tf
+  gazebo_msgs
 )
 
 #set(CMAKE_CXX_STANDARD 17)
@@ -167,6 +168,10 @@ add_executable(mpc_node_omni_coeffs src/mpc_node_omni_coeffs.cpp)
 target_link_libraries(mpc_node_omni_coeffs autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
 add_executable(line_tracking src/line_tracking.cpp)
 target_link_libraries(line_tracking autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
+
+
+add_executable(mpc_node_ip src/mpc_node_ip.cpp)
+target_link_libraries(mpc_node_ip autodiff::autodiff Eigen3::Eigen nlopt ${catkin_LIBRARIES})
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
