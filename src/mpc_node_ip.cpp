@@ -13,10 +13,10 @@
 #include <tf/transform_datatypes.h>
 #include "gazebo_msgs/ModelStates.h"
 #include "std_msgs/Float64.h"
-
+#include <fstream>
 MPC::MPC mpc;
 Eigen::Matrix <double, MPC::n_states, 1> cur_state;
-std::ofstream myfile;
+std::ofstream file;
 
 std_msgs::Float64 torgue;
 
@@ -46,8 +46,10 @@ void odom_callback(const gazebo_msgs::ModelStates::ConstPtr & input)
     for(int i = 0; i< MPC::n_states; ++i)
     {
       std::cout<<cur_state(i,0)<<" ";
+      file<<cur_state(i,0)<<"\t";
     }
     std::cout<<"\n";
+    file<<torgue.data<<"\n";
   }
 }
 
@@ -71,8 +73,19 @@ int main(int argc, char **argv)
   ros::Publisher Torgue1_pub = n.advertise<std_msgs::Float64>("/teeterbot/left_torque_cmd", 1);
   ros::Publisher Torgue2_pub = n.advertise<std_msgs::Float64>("/teeterbot/right_torque_cmd", 1);
   ros::Subscriber position_sub = n.subscribe("/gazebo/model_states", 1, odom_callback);
- 
-  
+
+
+  double r1;
+  Eigen::Matrix<autodiff::real, MPC::n_controls, MPC::n_controls> RR;
+  RR = mpc.R;
+  r1 = RR(0,0).val();
+  std::string file_name = "nonlinear_exp_1.txt";
+  file.open(file_name);
+  for (int i = 0; i < MPC::n_states; ++i)
+  {
+    file<<mpc.Q(i,i)<<"\t";
+  }
+  file<<r1<<"\n";
   torgue.data = 0;
 
 
@@ -84,7 +97,7 @@ int main(int argc, char **argv)
   {
       ref_path(0,i) = 0.0;
       ref_path(1,i) = 0.0;
-      ref_path(2,i) = 0;
+      ref_path(2,i) = 0.;
       ref_path(3,i) = 0;
       ref_con(0,i) = 0;
   }
@@ -117,7 +130,6 @@ int main(int argc, char **argv)
       double minf;
       calc_control = mpc.solve(cur_state,minf);
       torgue.data = -calc_control(0,0);
-      
 
     }
     else

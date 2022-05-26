@@ -32,11 +32,14 @@ namespace MPC
                 Q(i,j).val() = 0.;
             }
         }
-        this->Q(0,0).val() = .0;
+    
+       
+        this->R(0,0).val() = 0.001;
+        this->Q(0,0).val() = 0.;
         this->Q(1,1).val() = 0.5;
-        this->Q(2,2).val() = 2.5;
+        this->Q(2,2).val() = 5.5;
         this->Q(3,3).val() = .4;
-
+      
     }
 
     void MPC::euler_integration(Eigen::Matrix<autodiff::real, n_states, 1> const & curr_pos, Eigen::Matrix<autodiff::real, n_controls, 1> const & curr_controls,
@@ -47,11 +50,14 @@ namespace MPC
         double I0 = Ib + mb*pow(l,2);
         double mt = mb + 2 * mw;
         double m0 = mt + Iw/pow(r,2); 
+        
         next_pos(0,0) = curr_pos(0,0) + time_step * curr_pos(1,0);
         next_pos(1,0) = curr_pos(1,0) + time_step * 1/(I0*m0 - pow(a,2) * pow(cos(curr_pos(2,0)),2))*(a*I0 * pow(curr_pos(3,0),2) * sin(curr_pos(2,0)) - pow(a,2) * g * sin(curr_pos(2,0))  * cos(curr_pos(2,0)) + curr_controls(0,0) * ( I0/r + a *cos(curr_pos(2,0))));
         next_pos(2,0) = curr_pos(2,0) + time_step * curr_pos(2,0);
         next_pos(3,0) = curr_pos(3,0) + time_step * 1/(I0*m0 - pow(a,2) * pow(cos(curr_pos(2,0)),2))*(-pow(a,2)*pow(curr_pos(3,0),2) * sin(curr_pos(2,0))*cos(curr_pos(2,0)) + a*m0*g* sin(curr_pos(2,0)) - curr_controls(0,0) * ( m0 + a/r *cos(curr_pos(2,0))));
+        
         // Linearized model next state calculating
+        
         /*
         next_pos(0,0) = curr_pos(0,0) + time_step * curr_pos(1,0);
         next_pos(1,0) = curr_pos(1,0) + time_step * (-C1 * curr_pos(2,0) + C2 * curr_controls(0,0));
@@ -227,7 +233,7 @@ namespace MPC
         nlopt::opt new_opt(nlopt::LD_SLSQP, N*n_controls + (N+1)*n_states);
         opt = new_opt;
         double T_max, T_min;
-        T_max = 4.2; T_min = - T_max;
+        T_max = 5.2; T_min = - T_max;
         std::vector<double> ub(N*n_controls + (N+1)*n_states), lb(N*n_controls + (N+1)*n_states);
         for(int i = 0; i < N; ++i)
         {
@@ -258,7 +264,6 @@ namespace MPC
 
     Eigen::Matrix<double, n_controls, 1> MPC::solve(Eigen::Matrix<double, n_states, 1> init_cond, double & minf)
     {
-
        // std::vector<double> x(N*n_controls + (N+1)*n_states);
         for(int i =0; i< N*n_controls + (N+1)*n_states; ++i)
         {

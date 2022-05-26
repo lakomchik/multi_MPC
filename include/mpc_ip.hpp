@@ -23,17 +23,16 @@
 namespace MPC
 {
     const int N = 5; //Prediction horizon
-
     const int n_states = 4;
     const int n_controls = 1;
     const double dt = 0.025;
-    const autodiff::real C1 = 6.7924;
-    const autodiff::real C2 = 1.6480;
+    const autodiff::real C1 = 4.3188;
+    const autodiff::real C2 = 1.0479;
     const autodiff::real C3 = 22.0752;
-    const autodiff::real C4 = 5.0769;
-
+    const autodiff::real C4 = 2.8561;
     
-    Eigen::DiagonalMatrix <autodiff::real, 1> const R (.5);
+    //Eigen::DiagonalMatrix <autodiff::real, 1> const R (0.5);
+    //Eigen::DiagonalMatrix <double, n_states> const Q (0.,0.5,5.5,0.1);
     class MPC
     {
         private:
@@ -79,6 +78,8 @@ namespace MPC
         Eigen::Matrix<autodiff::real, n_states, N> reference_path;
         Eigen::Matrix<autodiff::real, n_controls, N> reference_controls;
         Eigen::Matrix <autodiff::real, n_states, n_states> Q;
+        Eigen::Matrix <autodiff::real, n_controls, n_controls> R;
+        
         nlopt::opt opt;
         std::vector<double> x;
         const double mb = 10;

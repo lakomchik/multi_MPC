@@ -28,7 +28,7 @@ namespace MPC
     const int n_controls = 3;
     const double dt = 0.1;
 
-    Eigen::DiagonalMatrix <autodiff::real, 3> const Q (20., 20., 20.0);
+    Eigen::DiagonalMatrix <autodiff::real, 3> const Q (1., 1., 1.0);
     Eigen::DiagonalMatrix <autodiff::real, 3> const R (0.5, 0.5, 0.1);
 
     class MPC
