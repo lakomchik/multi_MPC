@@ -9,7 +9,8 @@ import scipy.linalg
 
 
 cur_coords = np.zeros([4,1],dtype=float)
-
+file = open('lqr_exp_1.txt', 'w')
+control = Float64()
 def lqr_coeffs():
     A = np.zeros([4,4],dtype=float)
     B = np.zeros([4,1],dtype= float)
@@ -38,6 +39,7 @@ def lqr_coeffs():
     print(B)
     R = np.diag([0.01])
     Q = np.diag([0., 0.5, 5.5, .4])
+    file.write(str(Q[0,0])+"\t" + str(Q[1,1])+"\t"+str(Q[2,2])+str(Q[3,3])+"\t"+str(R[0,0])+"\n")
     P = scipy.linalg.solve_continuous_are(A,B,Q,R)
     print(P)
     R_inv = scipy.linalg.inv(R)
@@ -57,6 +59,7 @@ def odom_callback(data):
     cur_coords[1,0] = -data.twist[1].linear.x
     cur_coords[2,0] = -pitch_calculation(data.pose[1].orientation)
     cur_coords[3,0] = -data.twist[1].angular.y
+   
     #print(cur_coords.transpose())
     pass
 
@@ -67,11 +70,12 @@ def lqr_controller():
     T2_pub  = rospy.Publisher('/teeterbot/left_torque_cmd', Float64, queue_size= 1)
     rospy.Subscriber("/gazebo/model_states",ModelStates,odom_callback)
     rate = rospy.Rate(40)
-    control = Float64()
+    
     ref_state = np.zeros([4,1],dtype= float)
     K = lqr_coeffs()
     T_max = 5.2
     while not rospy.is_shutdown():
+        file.write(str(cur_coords[0,0])+"\t" + str(cur_coords[1,0])+"\t"+str(cur_coords[2,0])+"\t"+str(cur_coords[3,0])+"\t"+str(control.data)+"\n")
         ref_state = np.zeros([4,1],dtype= float)
         torgue = np.dot(K,(ref_state-cur_coords))
         torgue = torgue

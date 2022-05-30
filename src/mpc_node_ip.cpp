@@ -24,7 +24,7 @@ bool is_operation;
 
 void odom_callback(const gazebo_msgs::ModelStates::ConstPtr & input)
 {
-  if(!is_operation)
+  if(true)
   {
     cur_state(0,0) = input->pose[1].position.x;
     cur_state(1,0) = input->twist[1].linear.x;
@@ -79,7 +79,8 @@ int main(int argc, char **argv)
   Eigen::Matrix<autodiff::real, MPC::n_controls, MPC::n_controls> RR;
   RR = mpc.R;
   r1 = RR(0,0).val();
-  std::string file_name = "nonlinear_exp_1.txt";
+  std::string file_name = "nonlinear_exp_4.txt"; 
+  //std::string file_name = "linear_exp_4.txt"; 
   file.open(file_name);
   for (int i = 0; i < MPC::n_states; ++i)
   {
@@ -98,14 +99,14 @@ int main(int argc, char **argv)
       ref_path(0,i) = 0.0;
       ref_path(1,i) = 0.0;
       ref_path(2,i) = 0.;
-      ref_path(3,i) = 0;
+      ref_path(3,i) = 0.;
       ref_con(0,i) = 0;
   }
   
   mpc.set_reference(ref_path, ref_con);
   cur_state(0,0) = 0.;
   cur_state(1,0) = 0;
-  cur_state(2,0) = 0;
+  cur_state(2,0) = 0.;
   cur_state(3,0) = 0;
   
   ROS_INFO("MPC_INITIATED");
@@ -125,17 +126,18 @@ int main(int argc, char **argv)
     mpc.set_reference(ref_path, ref_con);
     Eigen::Matrix<double,MPC::n_controls, 1> calc_control;
 
-    if(fl == true)
+    double minf;
+    calc_control = mpc.solve(cur_state,minf);
+    torgue.data = -calc_control(0,0);
+    /*if(fl == true)
     {
-      double minf;
-      calc_control = mpc.solve(cur_state,minf);
-      torgue.data = -calc_control(0,0);
+
 
     }
     else
     {
       fl = false;
-    }
+    }*/
     
 
     

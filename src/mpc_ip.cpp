@@ -34,11 +34,11 @@ namespace MPC
         }
     
        
-        this->R(0,0).val() = 0.001;
+        this->R(0,0).val() = 0.;
         this->Q(0,0).val() = 0.;
         this->Q(1,1).val() = 0.5;
         this->Q(2,2).val() = 5.5;
-        this->Q(3,3).val() = .4;
+        this->Q(3,3).val() = 0.4;
       
     }
 
