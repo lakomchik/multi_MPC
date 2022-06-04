@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 {
   auto thr_num =  std::thread::hardware_concurrency();
   std::cout<<"thread_num = "<<thr_num<<"\n";
-  myfile.open ("output.txt");
+  myfile.open ("omni_mpc.txt");
   ros::init(argc, argv, "mpc_node");
   ros::NodeHandle n;
   ros::Publisher velocity_pub = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);

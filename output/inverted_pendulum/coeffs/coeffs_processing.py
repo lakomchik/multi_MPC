@@ -34,7 +34,7 @@ for line in f:
 
 
 names = ("x, м", "V, м/c", "\u03F4, Рад", "\u03C9, Рад/c", "Т, Н\u00D7м")
-plt.rcParams["figure.figsize"] = (7,8)
+plt.rcParams["figure.figsize"] = (7,12)
 
 fig, axs = plt.subplots(5)
 iter_range = 400
@@ -52,6 +52,7 @@ for i in range(5):
 
 
 axs[0].set_title(title)
-fig.legend(["NPMC","LMPC","LQR"])
+fig.legend(["NPMC","LMPC"])
 
 plt.show()
+#plt.savefig(num+".png")

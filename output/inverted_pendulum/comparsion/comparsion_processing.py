@@ -13,7 +13,7 @@ l_mpc_coords = np.zeros([0,5],dtype=float)
 lqr_coords = np.zeros([0,5],dtype=float)
 
 
-num = "1"
+num = "3"
 file_name = ("nonlinear_exp_" + num + ".txt")
 f = open(file_name)
 next(f)
@@ -42,7 +42,7 @@ lqr_coords[:,0:2] = - lqr_coords[:,0:2]
 
 names = ("x, м", "V, м/c", "\u03F4, Рад", "\u03C9, Рад/c", "Т, Н\u00D7м")
 
-plt.rcParams["figure.figsize"] = (7,8)
+plt.rcParams["figure.figsize"] = (7,12)
 fig, axs = plt.subplots(5)
 iter_range = 400
 time = np.arange(iter_range,dtype=float) * 0.025
@@ -54,7 +54,7 @@ for i in range(5):
     axs[i].set(xlabel= "t,c", ylabel=names[i])
     axs[i].yaxis.set_major_formatter(mtp.ticker.FormatStrFormatter('%.2f'))
     #axs[i].legend()
-axs[0].set_title(r'$\theta_0$' + " = -0.3 рад")
+axs[0].set_title(r'$\theta_0$' + " = -0.2 рад")
 fig.legend(["NPMC","LMPC","LQR"])
 
 
