@@ -55,7 +55,7 @@ for i in range(5):
     axs[i].yaxis.set_major_formatter(mtp.ticker.FormatStrFormatter('%.2f'))
     #axs[i].legend()
 axs[0].set_title(r'$\theta_0$' + " = -0.2 рад")
-fig.legend(["NPMC","LMPC","LQR"])
+fig.legend(["LQR","NPMC","LMPC"])
 
 
 plt.show()
