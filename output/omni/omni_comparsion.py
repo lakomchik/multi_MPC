@@ -37,7 +37,7 @@ for i in range(iter_num):
     ref_coords = np.append(ref_coords, [ref_step_coords], axis=0)
 
 
-file_name = ("omni_mpc.txt")
+file_name = ("omni_mpc_4.txt")
 
 f = open(file_name)
 for line in f:
@@ -45,7 +45,7 @@ for line in f:
     cur_coords = np.asarray(stroka,dtype=float)
     mpc_coords = np.append(mpc_coords, [cur_coords], axis=0)
 
-file_name = ("omni_pid.txt")
+file_name = ("omni_pid_4.txt")
 
 f = open(file_name)
 for line in f:
@@ -61,8 +61,8 @@ plt.rcParams["figure.figsize"] = (7,10)
 plot1 = plt.subplot2grid((4, 1), (0, 0), rowspan=3)
 plot2 = plt.subplot2grid((4, 1), (3, 0), rowspan=1)
 plot1.plot(ref_coords[:,0],ref_coords[:,1],"black",linewidth = 2, label = "Reference path")
-plot1.plot(pid_coords[:iter_num,0],pid_coords[:iter_num,1],"b--",linewidth=3.5, label = "PI")
-plot1.plot(mpc_coords[:iter_num,0],mpc_coords[:iter_num,1],"r--",linewidth=3.5, label = "MPC")
+plot1.plot(pid_coords[1:iter_num+1,0],pid_coords[1:iter_num+1,1],"b--",linewidth=3.5, label = "PID")
+plot1.plot(mpc_coords[1:iter_num+1,0],mpc_coords[1:iter_num+1,1],"r--",linewidth=3.5, label = "MPC")
 #print(gripper_coords[:,2])
 plot1.axis("equal")
 plot1.legend()
@@ -70,8 +70,8 @@ plot1.set_xlabel("X, M")
 plot1.set_ylabel("Y, M")
 time = np.arange(0,iter_num*0.1,0.1, dtype=float)
 plot2.plot(time,ref_coords[:iter_num,2],"black", linewidth = 2, label = "Reference \u03F4")
-plot2.plot(time,pid_coords[:iter_num,2],"b--", linewidth = 3.5, label = "PID \u03F4")
-plot2.plot(time,mpc_coords[:iter_num,2],"r--", linewidth = 3.5, label = "MPC \u03F4")
+plot2.plot(time,pid_coords[1:iter_num+1,2],"b--", linewidth = 3.5, label = "PID \u03F4")
+plot2.plot(time,mpc_coords[1:iter_num+1,2],"r--", linewidth = 3.5, label = "MPC \u03F4")
 plot2.legend()
 plot2.set_xlabel("t, c")
 plot2.set_ylabel("\u03F4, Rad")
